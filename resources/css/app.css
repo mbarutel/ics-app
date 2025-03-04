@@ -6,7 +6,7 @@
 @source "../**/*.js";
 @source "../**/*.vue";
 /* Is the line below even needed? */
-@source "../views";
+/* @source "../views"; */
 /* -------------------- */
 
 @theme {
@@ -14,4 +14,8 @@
         "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
+}
+
+.container {
+    @apply container mx-auto bg-stone-700;
 }
