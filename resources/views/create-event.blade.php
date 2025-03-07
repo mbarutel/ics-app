@@ -29,7 +29,9 @@
             <!-- Start Date -->
             <div class="mb-4">
                 <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date & Time</label>
-                <input type="datetime-local" id="start_date" name="start_date" value="{{ old('start_date') }}" required
+                <input type="datetime-local" id="start_date" name="start_date"
+                    value="{{ old('start_date', isset($event) ? \Carbon\Carbon::parse($event->start_date)->format('Y-m-d\TH:i') : '') }}"
+                    required
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-300">
                 @error('start_date')
                     <p class="text-sm text-red-500">{{ $message }}</p>
@@ -39,7 +41,9 @@
             <!-- End Date -->
             <div class="mb-4">
                 <label for="end_date" class="block text-sm font-medium text-gray-700">End Date & Time</label>
-                <input type="datetime-local" id="end_date" name="end_date" value="{{ old('end_date') }}" required
+                <input type="datetime-local" id="end_date" name="end_date"
+                    value="{{ old('end_date', isset($event) ? \Carbon\Carbon::parse($event->end_date)->format('Y-m-d\TH:i') : '') }}"
+                    required
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-300">
                 @error('end_date')
                     <p class="text-sm text-red-500">{{ $message }}</p>

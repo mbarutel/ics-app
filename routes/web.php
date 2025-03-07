@@ -27,5 +27,6 @@ Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->middlew
 // });
 
 // Event related controllers
-Route::get('/create-event', [EventController::class, 'showCreateEventForm']);
+Route::get('/events', [EventController::class, 'showEvents'])->middleware('auth');
+Route::get('/create-event', [EventController::class, 'showCreateEventForm'])->middleware('auth');
 Route::post('/create-event', [EventController::class, 'storeNewEvent']);

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Status;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Event extends Model
 {
@@ -13,10 +14,25 @@ class Event extends Model
         'description',
         'start_date',
         'end_date',
-        'venue'
+        'venue',
+        'status',
+        'created_by',
+        'updated_by'
     ];
 
     protected $cast = [
-        'status' => Status::class
+        'status' => Status::class,
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
     ];
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 }

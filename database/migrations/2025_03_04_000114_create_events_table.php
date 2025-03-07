@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            // $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('cascade');
-            // $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('cascade');
-            // $table->string('status');
-            // $table->foreignId('parent_id')->nullable()->constrained('events')->onDelete('cascade');
             $table->string('title')->unique();
             $table->string('slug')->unique();
             $table->text('description');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->string('venue');
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('cascade');
+            $table->string('status');
+            // $table->foreignId('parent_id')->nullable()->constrained('events')->onDelete('cascade');
         });
     }
 
