@@ -17,5 +17,5 @@
 }
 
 .container {
-    @apply container mx-auto bg-stone-700;
+    @apply container mx-auto py-12 px-2;
 }

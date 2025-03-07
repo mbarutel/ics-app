@@ -10,9 +10,11 @@
 </head>
 
 <body class="relative">
-    <header class="bg-stone-700 relative">
-        <livewire:navmenu />
-    </header>
+    @auth
+        <header class="bg-stone-700 relative">
+            <livewire:navmenu />
+        </header>
+    @endauth
 
     {{ $slot }}
 
