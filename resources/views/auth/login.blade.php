@@ -9,7 +9,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="" class="space-y-4">
+            <form method="POST" action="login" class="space-y-4">
                 @csrf
 
                 <div>
@@ -30,14 +30,14 @@
                     @enderror
                 </div>
 
-                <div class="flex items-center justify-between">
-                    <label class="flex items-center text-sm">
-                        <input type="checkbox" name="remember" class="mr-2 disabled">
-                        Remember me
-                    </label>
-                    <a href="" class="text-sm text-blue-500 hover:underline">Forgot
-                        password?</a>
-                </div>
+                <!-- <div class="flex items-center justify-between"> -->
+                <!--     <label class="flex items-center text-sm"> -->
+                <!--         <input type="checkbox" name="remember" class="mr-2 disabled"> -->
+                <!--         Remember me -->
+                <!--     </label> -->
+                <!--     <a href="" class="text-sm text-blue-500 hover:underline">Forgot -->
+                <!--         password?</a> -->
+                <!-- </div> -->
 
                 <button type="submit"
                     class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
