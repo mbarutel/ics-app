@@ -2,14 +2,16 @@
 
     <div class="container">
 
-        <form action="/event" method="POST" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
+        <form action="/event/{{ $event->id }}" method="POST"
+            class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
             @csrf
+            @method('PUT')
 
             <!-- Title -->
 
             <div class="mb-4">
                 <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-                <input type="text" id="title" name="title" value="{{ old('title') }}" required
+                <input type="text" id="title" name="title" value="{{ old('title', $event->title) }}" required
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-300">
                 @error('title')
                     <p class="text-sm text-red-500">{{ $message }}</p>
@@ -20,7 +22,7 @@
             <div class="mb-4">
                 <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                 <textarea id="description" name="description" rows="4" required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-300">{{ old('description') }}</textarea>
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-300">{{ old('description', $event->description) }}</textarea>
                 @error('description')
                     <p class="text-sm text-red-500">{{ $message }}</p>
                 @enderror
@@ -53,7 +55,7 @@
             <!-- Venue -->
             <div class="mb-4">
                 <label for="venue" class="block text-sm font-medium text-gray-700">Venue</label>
-                <input type="text" id="venue" name="venue" value="{{ old('venue') }}" required
+                <input type="text" id="venue" name="venue" value="{{ old('venue', $event->venue) }}" required
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-300">
                 @error('venue')
                     <p class="text-sm text-red-500">{{ $message }}</p>
@@ -70,5 +72,6 @@
         </form>
 
     </div>
+
 
 </x-layout>

@@ -32,8 +32,10 @@
                     @foreach ($events as $event)
                         <tr>
                             <td class="px-6 py-4 text-gray-900 font-medium">{{ $event->title }}</td>
-                            <td class="px-6 py-4 text-gray-600">{{ $event->start_date->format('n/j/Y') }}</td>
-                            <td class="px-6 py-4 text-gray-600">{{ $event->end_date->format('n/j/Y') }}</td>
+                            <td class="px-6 py-4 text-gray-600">
+                                {{ Carbon\Carbon::parse($event->start_date)->format('d-m-Y') }}</td>
+                            <td class="px-6 py-4 text-gray-600">
+                                {{ Carbon\Carbon::parse($event->end_date)->format('d-m-Y') }}</td>
                             <td class="px-6 py-4 text-gray-600">{{ $event->venue }}</td>
                             <td class="px-6 py-4">
                                 <span
@@ -43,7 +45,8 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <a href="" class="text-blue-600 hover:text-blue-900 text-sm">View</a>
+                                <a href="/event/{{ $event->id }}/edit"
+                                    class="text-blue-600 hover:text-blue-900 text-sm">Edit</a>
                             </td>
                         </tr>
                     @endforeach

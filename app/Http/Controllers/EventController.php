@@ -24,6 +24,11 @@ class EventController extends Controller
         return view('create-event');
     }
 
+    public function showEditEventForm(Event $event): View
+    {
+        return view('edit-event', ['event' => $event]);
+    }
+
     public function storeNewEvent(StoreEventRequest $request)
     {
         $incomingFields = $request->validated();
