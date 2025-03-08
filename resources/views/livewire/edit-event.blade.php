@@ -81,5 +81,12 @@
                 Save Changes
             </button>
         </form>
+        <form action="/event/{{ $event->id }}/publish" method="POST">
+            @csrf
+            <button type="submit"
+                class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg shadow-md text-lg">
+                Publish Event
+            </button>
+        </form>
     </div>
 </div>

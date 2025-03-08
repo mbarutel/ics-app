@@ -27,4 +27,5 @@ Route::get('/events', [EventController::class, 'showEvents'])->middleware('mustB
 Route::get('/create-event', [EventController::class, 'showCreateEventForm'])->middleware('mustBeLoggedIn');
 Route::get('/event/{event}/edit', [EventController::class, 'showEditEventForm'])->middleware('mustBeLoggedIn');
 Route::post('/event', [EventController::class, 'storeNewEvent'])->middleware('mustBeLoggedIn');
+Route::post('/event/{event}/publish', [EventController::class, 'publishEvent'])->middleware('mustBeLoggedIn');
 Route::put('/event/{event}', [EventController::class, 'updateEvent'])->middleware('mustBeLoggedIn');

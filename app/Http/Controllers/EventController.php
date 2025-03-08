@@ -14,7 +14,9 @@ class EventController extends Controller
 {
     public function showEvents(): View
     {
-        $events = Event::orderBy('start_date', 'desc')->paginate(15);
+        $events = Event::where('status', Status::DRAFT)
+            ->orderBy('start_date', 'desc')
+            ->paginate(15);
         $isAdmin = auth()->user()->is_admin;
 
         return view('events', ['events' => $events, 'isAdmin' => $isAdmin]);
@@ -33,8 +35,6 @@ class EventController extends Controller
     public function storeNewEvent(StoreEventRequest $request)
     {
         $incomingFields = $request->validated();
-
-        return $incomingFields;
 
         $incomingFields['title'] = strip_tags($incomingFields['title']);
         $incomingFields['slug'] = Str::slug($incomingFields['title']);
@@ -68,5 +68,34 @@ class EventController extends Controller
         return back()->with('success', 'Event successfully updated.');
     }
 
-    public function publishEvent() {}
+    public function publishEvent(Event $event)
+    {
+        if (!isset($event->published_id)) {
+            $publishedCopy = $event->replicate();
+            $publishedCopy = $this->initPublishedCopy($publishedCopy);
+            $event->published_id = $publishedCopy->id;
+            $event->save();
+        } else {
+            $publishedCopy = Event::find($event->published_id);
+
+            // If this has happened, there is a bug in the system
+            // There has been steps in place before reaching this point
+            if (!$publishedCopy) {
+                return back()->with('failure', 'BUG: This published event\'s draft version could not be found.');
+            }
+
+            $publishedCopy->fill($event->toArray());
+            $this->initPublishedCopy($publishedCopy);
+        }
+
+        return back()->with('success', 'This event is now published');
+    }
+
+    private function initPublishedCopy(Event $eventCopy): Event
+    {
+
+        $eventCopy->status = Status::PUBLISHED->value;
+        $eventCopy->save();
+        return $eventCopy;
+    }
 }
