@@ -30,8 +30,8 @@ class DatabaseSeeder extends Seeder
             'title' => 'Test Event',
             'status' => 'draft',
             'description' => 'Hello, this is a test event',
-            'start_date' => '2025-03-15T12:49:00.000000Z',
-            'end_date' => '2025-03-22T12:49:00.000000Z',
+            'start_date' => '2025-03-08T17:33',
+            'end_date' => '2025-03-18T15:34',
             'venue' => 'Hilton Hotel, Gold Coast',
             'published_id' => null
         ]);

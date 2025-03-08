@@ -34,6 +34,8 @@ class EventController extends Controller
     {
         $incomingFields = $request->validated();
 
+        return $incomingFields;
+
         $incomingFields['title'] = strip_tags($incomingFields['title']);
         $incomingFields['slug'] = Str::slug($incomingFields['title']);
         $incomingFields['description'] = strip_tags($incomingFields['description']);
@@ -58,8 +60,8 @@ class EventController extends Controller
         $incomingFields['description'] = strip_tags($incomingFields['description']);
         $incomingFields['venue'] = strip_tags($incomingFields['venue']);
         $incomingFields['updates_by'] = auth()->id();
-        $incomingFields['start_date'] = Carbon::parse($incomingFields['start_date'])->toISOString();
-        $incomingFields['end_date'] = Carbon::parse($incomingFields['end_date'])->toISOString();
+        $incomingFields['start_date'] = $incomingFields['start_date'];
+        $incomingFields['end_date'] = $incomingFields['end_date'];
         $incomingFields['status'] = $incomingFields['status'] ?? Status::DRAFT->value;
 
         $event->update($incomingFields);
