@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
-use App\Http\Controllers\RandomController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,18 +17,14 @@ Route::get('/login', [UserController::class, 'showLoginForm'])->middleware('gues
 Route::get('/register', [UserController::class, 'showRegistrationForm'])->middleware('guest');
 Route::post('/login', [UserController::class, 'login'])->middleware('guest');
 Route::post('/register', [UserController::class, 'register'])->middleware('guest');
-Route::post('/logout', [UserController::class, 'logout'])->middleware('auth');
+Route::post('/logout', [UserController::class, 'logout'])->middleware('mustBeLoggedIn');
 
 // Dashboard related controllers
-Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->middleware('auth');
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// });
+Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->middleware('mustBeLoggedIn');
 
 // Event related controllers
-Route::get('/events', [EventController::class, 'showEvents'])->middleware('auth');
-Route::get('/create-event', [EventController::class, 'showCreateEventForm'])->middleware('auth');
-Route::get('/event/{event}/edit', [EventController::class, 'showEditEventForm'])->middleware('auth');
-
-Route::post('/event', [EventController::class, 'storeNewEvent'])->middleware('auth');
-// Route::put('/event/{id}', [EventController::class, 'updateEvent'])->middleware('auth');
+Route::get('/events', [EventController::class, 'showEvents'])->middleware('mustBeLoggedIn');
+Route::get('/create-event', [EventController::class, 'showCreateEventForm'])->middleware('mustBeLoggedIn');
+Route::get('/event/{event}/edit', [EventController::class, 'showEditEventForm'])->middleware('mustBeLoggedIn');
+Route::post('/event', [EventController::class, 'storeNewEvent'])->middleware('mustBeLoggedIn');
+Route::put('/event/{event}', [EventController::class, 'updateEvent'])->middleware('mustBeLoggedIn');

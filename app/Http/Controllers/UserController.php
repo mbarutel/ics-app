@@ -29,8 +29,8 @@ class UserController extends Controller
         ]);
 
         $user = User::create([
-            'first_name' => $incomingFields['firstName'],
-            'last_name' => $incomingFields['lastName'],
+            'first_name' => strtolower($incomingFields['firstName']),
+            'last_name' => strtolower($incomingFields['lastName']),
             'email' => $incomingFields['email'],
             'password' => Hash::make($incomingFields['password']),
         ]);
