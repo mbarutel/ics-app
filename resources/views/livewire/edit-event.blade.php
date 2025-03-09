@@ -1,7 +1,10 @@
+<!-- Include Quill CSS -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+<!-- Alpine.js with Quill -->
 <div x-data="{
     isChanged: false,
     isDraft: @js($event->status === 'draft'),
-    showActions: false,
     formData: {
         title: @js($event->title),
         description: @js($event->description),
@@ -9,14 +12,33 @@
         end_date: @js($event->end_date),
         venue: @js($event->venue)
     },
-    originalData: @js($event->toArray())
-}" x-init="console.log('Original Data:', originalData, 'Form Data:', formData)"
-    x-effect="isChanged = ['title', 'description', 'start_date', 'end_date', 'venue'].some(key => formData[key] !== originalData[key])"
-    class="container">
+    originalData: @js($event->toArray()),
+    editor: null,
+    initQuill() {
+        this.editor = new Quill('#quill-editor', {
+            theme: 'snow'
+        });
+
+        // Set initial value
+        this.editor.root.innerHTML = this.formData.description;
+
+        // Update Alpine.js form data on change
+        this.editor.on('text-change', () => {
+            this.formData.description = this.editor.root.innerHTML;
+        });
+    }
+}"
+    x-effect="isChanged = ['title', 'description', 'start_date', 'end_date', 'venue'].some(key => {
+        let formValue = key === 'description' ? (new DOMParser().parseFromString(formData[key], 'text/html').body.textContent.trim()) : formData[key];
+        let originalValue = key === 'description' ? (new DOMParser().parseFromString(originalData[key], 'text/html').body.textContent.trim()) : originalData[key];
+
+        return formValue !== originalValue;
+    })"
+    x-init="initQuill()" class="container">
+
     <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg border border-gray-200">
         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Edit Event</h2>
 
-        <!-- Edit Event Form -->
         <form action="/event/{{ $event->id }}" method="POST" class="space-y-6">
             @csrf
             @method('PUT')
@@ -32,11 +54,11 @@
                 @enderror
             </div>
 
-            <!-- Description -->
+            <!-- Description with Quill -->
             <div>
-                <label for="description" class="block text-lg font-medium text-gray-700">Description</label>
-                <textarea id="description" name="description" rows="6" x-model="formData.description" required
-                    class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 p-3 rich-text-editor">{{ old('description', $event->description) }}</textarea>
+                <label class="block text-lg font-medium text-gray-700">Description</label>
+                <div id="quill-editor" class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm p-3"></div>
+                <input type="hidden" name="description" x-model="formData.description">
                 @error('description')
                     <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                 @enderror
@@ -77,40 +99,26 @@
                 @enderror
             </div>
 
-            <!-- Dropdown Action Button -->
-            <div class="relative mt-8 flex justify-end">
-                <button @click="showActions = !showActions" type="button"
-                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg shadow-md text-lg flex items-center gap-2 transition">
-                    Actions
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </button>
+            <!-- Action Buttons -->
+            <button x-bind:disabled="!isChanged" type="submit"
+                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg shadow-md text-lg transition"
+                :class="{ 'opacity-50 cursor-not-allowed': !isChanged }">
+                Save Changes
+            </button>
+        </form>
 
-                <!-- Dropdown Menu -->
-                <div x-show="showActions" @click.away="showActions = false"
-                    class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                    <form action="/event/{{ $event->id }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <button type="submit" x-bind:disabled="!isChanged"
-                            class="w-full text-left px-4 py-3 hover:bg-gray-100 text-gray-800"
-                            :class="{ 'opacity-50 cursor-not-allowed': !isChanged }">
-                            Save Changes
-                        </button>
-                    </form>
-
-                    <form action="/event/{{ $event->id }}/publish" method="POST">
-                        @csrf
-                        <button type="submit" x-bind:disabled="!isDraft"
-                            class="w-full text-left px-4 py-3 hover:bg-gray-100 text-gray-800"
-                            :class="{ 'opacity-50 cursor-not-allowed': !isDraft }">
-                            Publish Event
-                        </button>
-                    </form>
-                </div>
-            </div>
+        <!-- Publish Event Form -->
+        <form x-bind:disabled="!isDraft && !isChanged" action="/event/{{ $event->id }}/publish" method="POST"
+            class="mt-4 flex flex-col sm:flex-row sm:justify-end">
+            @csrf
+            <button type="submit"
+                class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg shadow-md text-lg transition"
+                :class="{ 'opacity-50 cursor-not-allowed': !isDraft }">
+                Publish Event
+            </button>
         </form>
     </div>
 </div>
+
+<!-- Include Quill JS -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>

@@ -5,13 +5,20 @@ namespace App\Http\Controllers;
 use App\Enums\Status;
 use App\Http\Requests\StoreEventRequest;
 use App\Models\Event;
-use Carbon\Carbon;
+use HTMLPurifier;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class EventController extends Controller
 {
+    protected $purifier;
+
+    public function __construct(HTMLPurifier $purifier)
+    {
+        $this->purifier = $purifier;
+    }
+
     public function showEvents(): View
     {
         $events = Event::where('status', Status::DRAFT)
@@ -39,12 +46,12 @@ class EventController extends Controller
 
         $incomingFields['title'] = strip_tags($incomingFields['title']);
         $incomingFields['slug'] = Str::slug($incomingFields['title']);
-        $incomingFields['description'] = strip_tags($incomingFields['description']);
+        $incomingFields['description'] = $this->purifier->purify($incomingFields['description']);
         $incomingFields['venue'] = strip_tags($incomingFields['venue']);
         $incomingFields['created_by'] = auth()->id();
         $incomingFields['updated_by'] = $incomingFields['created_by'];
-        $incomingFields['start_date'] = Carbon::parse($incomingFields['start_date'])->toISOString();
-        $incomingFields['end_date'] = Carbon::parse($incomingFields['end_date'])->toISOString();
+        $incomingFields['start_date'] = $incomingFields['start_date'];
+        $incomingFields['end_date'] = $incomingFields['end_date'];
         $incomingFields['status'] = $incomingFields['status'] ?? Status::DRAFT->value;
 
         Event::create($incomingFields);
@@ -58,7 +65,7 @@ class EventController extends Controller
 
         $incomingFields['title'] = strip_tags($incomingFields['title']);
         $incomingFields['slug'] = Str::slug($incomingFields['title']);
-        $incomingFields['description'] = strip_tags($incomingFields['description']);
+        $incomingFields['description'] = $this->purifier->purify($incomingFields['description']);
         $incomingFields['venue'] = strip_tags($incomingFields['venue']);
         $incomingFields['updated_by'] = auth()->id();
         $incomingFields['start_date'] = $incomingFields['start_date'];

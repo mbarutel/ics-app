@@ -1,9 +1,28 @@
 <x-layout>
 
+    <!-- Include Quill CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
     <div class="container mx-auto px-4 py-8">
 
         <form action="/event" method="POST"
-            class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg border border-gray-200">
+            class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg border border-gray-200" x-data="{
+                description: @js(old('description', '')),
+                editor: null,
+                initQuill() {
+                    this.editor = new Quill('#quill-editor', { theme: 'snow' });
+            
+                    // Set initial value if exists
+                    this.editor.root.innerHTML = this.description;
+            
+                    // Update description when Quill content changes
+                    this.editor.on('text-change', () => {
+                        this.description = this.editor.root.innerHTML;
+                    });
+                }
+            }"
+            x-init="initQuill()">
+
             @csrf
 
             <h2 class="text-2xl font-semibold text-gray-800 mb-6">Create Event</h2>
@@ -18,11 +37,11 @@
                 @enderror
             </div>
 
-            <!-- Description (Rich Text Editor) -->
+            <!-- Description (Quill Rich Text Editor) -->
             <div class="mb-6">
-                <label for="description" class="block text-lg font-medium text-gray-700">Description</label>
-                <textarea id="description" name="description" rows="6" required
-                    class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 p-3 rich-text-editor">{{ old('description') }}</textarea>
+                <label class="block text-lg font-medium text-gray-700">Description</label>
+                <div id="quill-editor" class="mt-2 block w-full rounded-lg border border-gray-300 shadow-sm p-3"></div>
+                <input type="hidden" name="description" x-model="description">
                 @error('description')
                     <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                 @enderror
@@ -58,22 +77,6 @@
                 @enderror
             </div>
 
-            <!-- Status Toggle -->
-            <div class="mb-6 flex items-center">
-                <label for="status" class="block text-lg font-medium text-gray-700 mr-4">Status</label>
-                <input type="hidden" name="status" value="inactive">
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" id="status" name="status" value="active"
-                        {{ old('status') === 'active' ? 'checked' : '' }} class="sr-only peer">
-                    <div
-                        class="w-12 h-6 bg-gray-300 peer-focus:ring-2 peer-focus:ring-indigo-500 rounded-full peer peer-checked:bg-indigo-600">
-                    </div>
-                    <span class="ml-3 text-gray-700 text-lg font-medium peer-checked:text-indigo-600">
-                        Active
-                    </span>
-                </label>
-            </div>
-
             <!-- Submit Button -->
             <div class="mt-8">
                 <button type="submit"
@@ -81,8 +84,12 @@
                     Create Event
                 </button>
             </div>
+
         </form>
 
     </div>
+
+    <!-- Include Quill JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 
 </x-layout>

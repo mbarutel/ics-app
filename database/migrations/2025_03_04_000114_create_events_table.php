@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('slug');
             $table->string('title');
             $table->string('status');
-            $table->text('description');
+            $table->longText('description');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->string('venue');
