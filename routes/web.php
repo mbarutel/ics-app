@@ -32,9 +32,9 @@ Route::post('/event/{event}/publish', [EventController::class, 'publishEvent'])-
 Route::put('/event/{event}', [EventController::class, 'updateEvent'])->middleware('mustBeLoggedIn');
 
 // Conference related controllers
-/* Route::get('/events', [EventController::class, 'showEvents'])->middleware('mustBeLoggedIn'); */
+Route::get('/conferences', [ConferenceController::class, 'showConferences'])->middleware('mustBeLoggedIn');
 Route::get('/create-conference', [ConferenceController::class, 'showCreateConferenceForm'])->middleware('mustBeLoggedIn');
-/* Route::get('/event/{event}/edit', [EventController::class, 'showEditEventForm'])->middleware('mustBeLoggedIn'); */
-/* Route::post('/event', [EventController::class, 'storeNewEvent'])->middleware('mustBeLoggedIn'); */
+Route::post('/conference', [ConferenceController::class, 'storeNewConference'])->middleware('mustBeLoggedIn');
+Route::get('/conference/{conference}/edit', [ConferenceController::class, 'showEditConferenceForm'])->middleware('mustBeLoggedIn');
 /* Route::post('/event/{event}/publish', [EventController::class, 'publishEvent'])->middleware('mustBeLoggedIn'); */
 /* Route::put('/event/{event}', [EventController::class, 'updateEvent'])->middleware('mustBeLoggedIn'); */

@@ -3,9 +3,9 @@
         <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
 
-            @if (session('error'))
+            @if (session()->has('failure'))
                 <div class="mb-4 text-red-600 text-sm">
-                    {{ session('error') }}
+                    {{ session('failure') }}
                 </div>
             @endif
 
